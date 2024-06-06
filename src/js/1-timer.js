@@ -1,41 +1,60 @@
 import flatpickr from "flatpickr";
 import 'flatpickr/dist/flatpickr.css';
+import iziToast from "izitoast";
+import "izitoast/dist/css/iziToast.min.css";
 
 const startBtn = document.querySelector('.btn-start');
-const timer = document.querySelector('.timer');
+const daysElement = document.querySelector('[data-days]');
+const hoursElement = document.querySelector('[data-hours]');
+const minutesElement = document.querySelector('[data-minutes]');
+const secondsElement = document.querySelector('[data-seconds]');
 
-let userSelectedDate = null;
+startBtn.disabled = true;
+let userSelectedDate;
+let intervalId;
 
 flatpickr("#datetime-picker", {
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
-    onClose(selectedDates) {
-      userSelectedDate = selectedDates[0];
+  onClose(selectedDates) {
+    const now = new Date();
+    userSelectedDate = selectedDates[0];
+
+    if (userSelectedDate <= now) {
+      iziToast.error({
+        message: "Please choose a date in the future"
+      });
+      startBtn.disabled = true;
+    } else {
+      startBtn.disabled = false;
+    }
     },
 });
 
-let intervalId;
+startBtn.addEventListener('click', () => {
+  const initTime = userSelectedDate.getTime();
 
-startBtn.addEventListener('click', (event) => {
-  const initTime = event.target.value;
-
-  startBtn.disabled = true;
+  if (userSelectedDate > initTime) {
+    startBtn.disabled = false;
+  }
 
   intervalId = setInterval(() => {
     const currentTime = Date.now();
     const remainingTime = initTime - currentTime;
+
+    if (remainingTime <= 0) {
+      clearInterval(intervalId);
+      startBtn.disabled = false;
+      updateTimerDisplay({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      startBtn.disabled = false;
+      return;
+    }
+
     const time = convertMs(remainingTime);
-    const str = getTime(time);
-
-    timer.innerHTML = str;
+    updateTimerDisplay(time);
   }, 1000);
-
-  setTimeout(() => {
-    clearInterval(intervalId);
-    startBtn.disabled = false;
-  }, initTime - Date.now() - 1000)
 });
 
 
@@ -53,19 +72,14 @@ function convertMs(ms) {
   return { days, hours, minutes, seconds };
 }
 
-function getTime({ days, hours, minutes, seconds }) {
-  days = days.toString();
-  hours = hours.toString();
-  minutes = minutes.toString();
-  seconds = seconds.toString();
-
-  return `${days}:${hours}:${minutes}:${seconds}`;
+function updateTimerDisplay({ days, hours, minutes, seconds }) {
+  daysElement.textContent = formatTimeComponent(days);
+  hoursElement.textContent = formatTimeComponent(hours);
+  minutesElement.textContent = formatTimeComponent(minutes);
+  secondsElement.textContent = formatTimeComponent(seconds);
 }
 
 function formatTimeComponent(value) {
   return value.toString().padStart(2, '0');
 }
 
-function updateTimerDisplay({ days, hours, minutes, seconds }) {
-  timerDisplay.textContent = `${formatTimeComponent(days)}:${formatTimeComponent(hours)}:${formatTimeComponent(minutes)}:${formatTimeComponent(seconds)}`;
-}
