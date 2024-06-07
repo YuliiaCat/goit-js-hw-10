@@ -15,18 +15,18 @@ function createPromise(value, delay, status) {
   return promise;
 }
 
-function onFulfilled(value) {
+function onFulfilled(value, delay) {
   iziToast.show({
-    message: `✅ Fulfilled promise in ${delayInput.value}ms`,
+    message: `✅ Fulfilled promise in ${delay}ms`,
     backgroundColor: 'rgba(89, 161, 13, 0.8)',
     messageColor: 'rgb(255, 255, 255)',
     position: 'topRight',
   });
 }
 
-function onRejected(value) {
+function onRejected(value, delay) {
   iziToast.show({
-    message: `❌ Rejected promise in ${delayInput.value}ms`,
+    message: `❌ Rejected promise in ${delay}ms`,
     backgroundColor: 'rgba(239, 64, 64, 0.8)',
     messageColor: 'rgb(255, 255, 255)',
     position: 'topRight',
@@ -40,7 +40,9 @@ button.addEventListener('click', (event) => {
   const value = Array.from(stateInputs).find(input => input.checked).value;
   const status = value === 'fulfilled';
 
-  createPromise(value, delay, status).then(onFulfilled).catch(onRejected);
+  createPromise(value, delay, status)
+    .then(() => onFulfilled(value, delay))
+    .catch(() => onRejected(value, delay));
 
   delayInput.value = '';
 
