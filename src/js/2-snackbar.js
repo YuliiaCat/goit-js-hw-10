@@ -17,7 +17,7 @@ function createPromise(value, delay, status) {
 
 function onFulfilled(value, delay) {
   iziToast.show({
-    message: `✅ Fulfilled promise in ${delay}ms`,
+    message: `✅ ${value} promise in ${delay}ms`,
     backgroundColor: 'rgba(89, 161, 13, 0.8)',
     messageColor: 'rgb(255, 255, 255)',
     position: 'topRight',
@@ -26,7 +26,7 @@ function onFulfilled(value, delay) {
 
 function onRejected(value, delay) {
   iziToast.show({
-    message: `❌ Rejected promise in ${delay}ms`,
+    message: `❌ ${value} promise in ${delay}ms`,
     backgroundColor: 'rgba(239, 64, 64, 0.8)',
     messageColor: 'rgb(255, 255, 255)',
     position: 'topRight',
