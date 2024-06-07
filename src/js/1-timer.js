@@ -24,7 +24,8 @@ flatpickr("#datetime-picker", {
 
     if (userSelectedDate <= now) {
       iziToast.error({
-        message: "Please choose a date in the future"
+        message: "Please choose a date in the future",
+        position: 'topRight',
       });
       startBtn.disabled = true;
     } else {
@@ -36,9 +37,7 @@ flatpickr("#datetime-picker", {
 startBtn.addEventListener('click', () => {
   const initTime = userSelectedDate.getTime();
 
-  if (userSelectedDate > initTime) {
-    startBtn.disabled = false;
-  }
+  startBtn.disabled = true;
 
   intervalId = setInterval(() => {
     const currentTime = Date.now();
