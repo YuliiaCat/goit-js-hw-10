@@ -1,7 +1,8 @@
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 
-const button = document.querySelector('.submit-btn');
+// const button = document.querySelector('.submit-btn');
+const form = document.querySelector('.form');
 const delayInput = document.querySelector('.delay-input');
 const stateInputs = document.querySelectorAll('input[name="state"]');
 
@@ -33,7 +34,7 @@ function onRejected(value, delay) {
   });
 }
 
-button.addEventListener('click', (event) => {
+form.addEventListener('submit', (event) => {
   event.preventDefault();
 
   const delay = parseInt(delayInput.value, 10);
@@ -44,9 +45,9 @@ button.addEventListener('click', (event) => {
     .then(() => onFulfilled(value, delay))
     .catch(() => onRejected(value, delay));
 
-  delayInput.value = '';
+    delayInput.value = '';
 
-  stateInputs.forEach(input => {
+    stateInputs.forEach(input => {
       input.checked = false;
   });
 });

@@ -4,6 +4,7 @@ import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 
 const startBtn = document.querySelector('.btn-start');
+const dayInput = document.querySelector('#datetime-picker');
 const daysElement = document.querySelector('[data-days]');
 const hoursElement = document.querySelector('[data-hours]');
 const minutesElement = document.querySelector('[data-minutes]');
@@ -38,6 +39,7 @@ startBtn.addEventListener('click', () => {
   const initTime = userSelectedDate.getTime();
 
   startBtn.disabled = true;
+  dayInput.disabled = true;
 
   intervalId = setInterval(() => {
     const currentTime = Date.now();
@@ -46,8 +48,7 @@ startBtn.addEventListener('click', () => {
     if (remainingTime <= 0) {
       clearInterval(intervalId);
       startBtn.disabled = false;
-      updateTimerDisplay({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-      startBtn.disabled = false;
+      dayInput.disabled = false;
       return;
     }
 
